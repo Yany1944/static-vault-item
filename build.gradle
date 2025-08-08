@@ -1,0 +1,50 @@
+plugins {
+    id 'fabric-loom' version '1.8.13'
+    id 'maven-publish'
+}
+
+base {
+    archivesName = "static-vault-item"
+}
+
+group = "com.example"
+version = "1.0.0"
+
+repositories {
+    mavenCentral()
+    maven { url = "https://maven.fabricmc.net/" }
+    maven { url = "https://maven.shedaniel.me/" }
+    maven { url = "https://maven.terraformersmc.com/releases/" }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.21.8"
+    mappings loom.officialMojangMappings()
+    implementation "net.fabricmc:fabric-loader:0.16.9"
+
+    // Реальная версия Fabric API на данный момент для MC 1.21.8:
+    implementation "net.fabricmc.fabric-api:fabric-api:0.99.4+1.21"
+
+    // Cloth Config (если нужен)
+    implementation("me.shedaniel.cloth:cloth-config:19.0.147")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)  // JDK 21 или 24 подойдёт
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release.set(21)
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
